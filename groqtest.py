@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
 # completion = client.chat.completions.create(
 #     model="meta-llama/llama-4-scout-17b-16e-instruct",
 #     messages=[
@@ -30,9 +30,14 @@ client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 #     response_format={"type": "json_object"},
 #     stop=None,
 # )
-
+# client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 # print(completion.choices[0].message.content)
-def get_completions(client, image_url):
+
+
+
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+def invoice_extractor_groq(image_url):
+    
     completion = client.chat.completions.create(
         model="meta-llama/llama-4-scout-17b-16e-instruct",
         messages=[
@@ -41,16 +46,12 @@ def get_completions(client, image_url):
                 "content": [
                     {
                         "type": "text",
-                        "text": """Answer the following:
-1. What is the name of the person or entity responsible for paying the bill? (Look for BILLTO or BILL TO or INVOICE TO similar keywords)
-2. What is the subtotal amount? (Look for the keyword Subtotal)
-3. What is the total amount? (Look for the keyword TOTAL)
-List the answer in JSON format."""
+                        "text": "Answer the following:1. What is the name of the person or entity responsible for paying the bill? (Look for BILLTO or BILL TO or INVOICE TO similar keywords)2. What is the subtotal amount? (Look for the keyword Subtotal)3. What is the total amount? (Look for the keyword TOTAL) .List the answer in JSON format."
                     },
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": image_url
+                            "url": image_url  # Using the passed parameter
                         }
                     }
                 ]
@@ -66,6 +67,7 @@ List the answer in JSON format."""
     
     return completion.choices[0].message.content
 
-image_url = "https://cdn.venngage.com/template/thumbnail/small/5b650276-1deb-4fa5-adee-a0b8b935cb37.webp"
-result = get_completions(client, image_url)
-print(result)
+# Example of calling the function with a specific image URL
+# image_url = "https://cdn.venngage.com/template/thumbnail/small/5b650276-1deb-4fa5-adee-a0b8b935cb37.webp"
+# result = invoice_extractor_groq(image_url)
+# print(result)
